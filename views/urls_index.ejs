@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <% include ./partials/_header %>
+</head>
+<body>
+  <ul>
+
+    <% for (property in urls) { %>
+
+      <li><%= urls[property] %> - <%= property %></li>
+
+    <% }; %>
+
+  </ul>
+
+    <a href="deadlink">deadlink</a>
+
+</body>
+</html>
