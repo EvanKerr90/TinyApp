@@ -19,20 +19,23 @@ var urlDatabase = {
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
+//deletes the associated short and long URLs when the user
+//clicks the submit button
+app.post("/urls/:id/delete", (req, res) => {
+delete urlDatabase[req.params.id];
+//console.log(req.params.id);
+res.redirect("/urls")
+});
 //renders the urls_index html file
 app.get("/urls", (req, res) => {
   let urlsIndex = {urls: urlDatabase};
   res.render('urls_index', urlsIndex);
 });
 
-app.post("/urls/:id/delete", (req, res) => {
-delete urlDatabase[req];
-res.redirect("/urls");
-});
 //adds the generated short URL and the associated
 //long URL to the database object
 app.post("/urls", (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   let shortURL = generateRandomString()  // debug statement to see POST parameters
   urlDatabase[shortURL] = req.body['longURL'];
   //res.send("Ok");
