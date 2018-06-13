@@ -22,7 +22,7 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
-//sets what to show according to the different URLs
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -40,7 +40,8 @@ app.get("/urls", (req, res) => {
 
 //displays the page where the user enters a URL to shorten
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let currentUser = {username: req.cookies["username"]};
+  res.render("urls_new", currentUser);
 });
 
 //generates the page that the user is redirected to when they
@@ -65,9 +66,9 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-//app.get("/hello", (req, res) => {
-  //res.end("<html><body>Hello <b>World</b></body></html>\n")
-//});
+app.get("/hello", (req, res) => {
+  res.end("<html><body>Hello <b>World</b></body></html>\n")
+});
 
 //adds the generated short URL and the associated
 //long URL to the database object
