@@ -5,7 +5,14 @@
 </head>
 <body>
 
-  <p><%= shortURL %> - <%= longURL %></p>
+  <p> <%= shortURL %> - <%= longURL %>
+
+    <form method="POST" action="/urls/<%=shortURL%>">
+      New URL:<input type="text" name="newURL">
+      <button type="submit" value="Update">Update</form>
+
+
+  </p>
 
 </body>
 </html>

@@ -45,11 +45,17 @@ app.post("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] = req.body.newURL;
+  console.log(req)
+  res.redirect("/urls");
+});
 //generates the page that the user is redirected to when they
 //submit a url to shorten
 app.get("/urls/:id", (req, res) => {
   let longURL = urlDatabase[req.params.id];
-  console.log(longURL)
+  //console.log(longURL)
   let urlsShow = { shortURL: req.params.id, longURL: longURL };
   res.render('urls_show', urlsShow);
 });
@@ -63,9 +69,9 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n")
-});
+//app.get("/hello", (req, res) => {
+  //res.end("<html><body>Hello <b>World</b></body></html>\n")
+//});
 //sets what port to receive requests from
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

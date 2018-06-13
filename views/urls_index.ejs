@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <% include ./partials/_header %>
@@ -11,12 +10,12 @@
 
       <li><%= urls[property] %> - <%= property %>
       <form method="POST" action="/urls/<%=property%>/delete"><input type="submit" value="DELETE"></form></li>
+        <a href="/urls/<%=property%>">Edit</a>
 
     <% }; %>
 
   </ul>
 
-    <a href="deadlink">deadlink</a>
 
 </body>
 </html>
