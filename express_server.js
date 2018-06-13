@@ -19,33 +19,33 @@ var urlDatabase = {
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
-
+//renders the urls_index html file
 app.get("/urls", (req, res) => {
   let urlsIndex = {urls: urlDatabase};
   res.render('urls_index', urlsIndex);
 });
-
+//adds the generated short URL and the associated
+//long URL to the database object
 app.post("/urls", (req, res) => {
   console.log(req.body);
   let shortURL = generateRandomString()  // debug statement to see POST parameters
   urlDatabase[shortURL] = req.body['longURL'];
   //res.send("Ok");
-  //console.log(urlDatabase);
   res.redirect('/urls/' + shortURL)    // Respond with 'Ok' (we will replace this)
 });
-
+//displays the page where the user enters a URL to shorten
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
-
+//generates the page that the user is redirected to when they
+//submit a url to shorten
 app.get("/urls/:id", (req, res) => {
   let longURL = urlDatabase[req.params.id];
   console.log(longURL)
   let urlsShow = { shortURL: req.params.id, longURL: longURL };
   res.render('urls_show', urlsShow);
-  //res.redirect(longURL)
 });
-
+//redirects the user to the long URL associated with the short URL
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
   res.redirect(301, longURL);
