@@ -48,7 +48,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.newURL;
-  console.log(req)
+  //console.log(req)
   res.redirect("/urls");
 });
 //generates the page that the user is redirected to when they
