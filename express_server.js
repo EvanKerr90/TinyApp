@@ -24,6 +24,11 @@ app.get("/urls", (req, res) => {
   let urlsIndex = {urls: urlDatabase};
   res.render('urls_index', urlsIndex);
 });
+
+app.post("/urls/:id/delete", (req, res) => {
+delete urlDatabase[req];
+res.redirect("/urls");
+});
 //adds the generated short URL and the associated
 //long URL to the database object
 app.post("/urls", (req, res) => {
@@ -50,7 +55,6 @@ app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
   res.redirect(301, longURL);
 });
-
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);

@@ -9,7 +9,8 @@
 
     <% for (property in urls) { %>
 
-      <li><%= urls[property] %> - <%= property %></li>
+      <li><%= urls[property] %> - <%= property %> -
+      <button><form method="POST" action="/urls/"<%= property%>"/delete"%>>DELETE</form></li>
 
     <% }; %>
 
