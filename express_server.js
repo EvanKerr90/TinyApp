@@ -18,6 +18,18 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
 };
 
+function findUserByCookie(cookieID) {
+  return users[cookieID];
+};
+
+function findUserByEmail(email) {
+  for (id in users) {
+    if (email === users[id]['email']) {
+    return users[id];
+    }
+  }
+};
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -33,6 +45,11 @@ const users = {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk"
+  },
+  "ofvicx": {
+    id: "ofvicx",
+    email: 'evankrkerr90@gmail.com',
+    password: "stuff"
   }
 };
 
@@ -43,8 +60,9 @@ app.get("/", (req, res) => {
 
 //renders the urls_index html file
 app.get("/urls", (req, res) => {
+  let UserID = findUserByCookie(req.cookies.userID);
   let urlsIndex = {
-  username: req.cookies["username"],
+  user: UserID,
   urls: urlDatabase
 };
   res.render('urls_index', urlsIndex);
@@ -53,20 +71,23 @@ app.get("/urls", (req, res) => {
 
 //displays the page where the user enters a URL to shorten
 app.get("/urls/new", (req, res) => {
-  let currentUser = {username: req.cookies["username"]};
-  res.render("urls_new", currentUser);
+  let user = findUserByCookie(req.cookies.userID);
+  //console.log(currentUser)
+  res.render("urls_new", user);
 });
 
 //generates the page that the user is redirected to when they
 //submit a url to shorten
 app.get("/urls/:id", (req, res) => {
   let longURL = urlDatabase[req.params.id];
+  let UserID = findUserByCookie(req.cookies.userID);
   //console.log(longURL)
   let urlsShow = {
     shortURL: req.params.id,
     longURL: longURL,
-    username: req.cookies["username"]
+    user: UserID
   };
+  console.log(urlsShow);
   res.render('urls_show', urlsShow);
 });
 //redirects the user to the long URL associated with the short URL
@@ -111,29 +132,36 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-username = req.body.username;
-res.cookie('username', username);
+//let userID = findUserByCookie(req.cookies.userID);
+let user = findUserByEmail(req.body.email);
+//console.log(req)
+res.cookie('userID', user['id']);
 res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) => {
-res.clearCookie('username');
+let userID = findUserByCookie(req.cookies.userID);
+res.clearCookie('userID');
 res.redirect('/urls');
 });
 
 app.post("/register", (req, res) => {
 let userID = generateRandomString();
-users[userID] = {id: userID, email: req.body.email, password: req.body.password};
-res.cookie("userID", userID);
-if (!req.body.email.length || !req.body.password.length) {
+if (!req.body.email || !req.body.password) {
   res.status(400).send("Email or password is empty");
-}
+  }
 for (id in users) {
   if (req.body.email === users[id]['email']) {
     res.status(400).send("Email already exists.");
-  }
-}
+  } else {
+    users[userID] = {id: userID, email: req.body.email, password: req.body.password}
+res.cookie("userID", userID);
 res.redirect("/urls");
+  };
+};
+
+//console.log(req.cookies.userID)
+//res.redirect("/urls");
 //console.log(users)
 });
 

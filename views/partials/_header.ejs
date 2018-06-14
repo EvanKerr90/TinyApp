@@ -6,12 +6,12 @@
 </head>
 <body>
   <h1>TinyApp</h1>
-    <% if (!locals.username)  { %>
+    <% if (!user)  { %>
     <form method="POST" action="/login">
       Username:<input type="text" name="username"><b>
       <input type="submit" value="Submit" class="btn btn-primary"></form>
     <% } else { %>
-    Logged in as: <%=username%>
+    Logged in as: <%=user.email%>
     <form method="POST" action="/logout">
       <input type="submit" value="Logout" class="btn btn-danger"></form>
     <% } %>
