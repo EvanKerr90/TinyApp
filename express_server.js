@@ -87,7 +87,6 @@ app.get("/urls/:id", (req, res) => {
     longURL: longURL,
     user: UserID
   };
-  console.log(urlsShow);
   res.render('urls_show', urlsShow);
 });
 //redirects the user to the long URL associated with the short URL
