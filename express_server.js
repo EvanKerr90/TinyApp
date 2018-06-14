@@ -46,11 +46,6 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   },
-  "ofvicx": {
-    id: "ofvicx",
-    email: 'evankrkerr90@gmail.com',
-    password: "stuff"
-  }
 };
 
 app.get("/", (req, res) => {
