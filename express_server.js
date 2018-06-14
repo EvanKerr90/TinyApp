@@ -23,6 +23,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -70,6 +83,10 @@ app.get("/hello", (req, res) => {
   res.end("<html><body>Hello <b>World</b></body></html>\n")
 });
 
+app.get("/register", (req, res) => {
+  res.render("urls_register.ejs")
+});
+
 //adds the generated short URL and the associated
 //long URL to the database object
 app.post("/urls", (req, res) => {
@@ -104,6 +121,13 @@ res.clearCookie('username');
 res.redirect('/urls');
 });
 
+app.post("/register", (req, res) => {
+let userID = generateRandomString();
+users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+res.cookie("userID", userID);
+res.redirect("/urls");
+//console.log(users)
+});
 
 
 
