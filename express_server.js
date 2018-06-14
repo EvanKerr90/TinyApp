@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
 
 //renders the urls_index html file
 app.get("/urls", (req, res) => {
-  let user = findUserByCookie(req.cookies.userID);
+  let user = findUserByCookie(req.cookies.user_id);
   let urlsIndex = {
   user: user,
   urls: urlDatabase
@@ -66,21 +66,24 @@ app.get("/urls", (req, res) => {
 
 //displays the page where the user enters a URL to shorten
 app.get("/urls/new", (req, res) => {
-  let user = findUserByCookie(req.cookies.userID);
-  //console.log(currentUser)
-  res.render("urls_new", user);
+let user = findUserByCookie(req.cookies.user_id);
+  if (!user) {
+    res.redirect("/login");
+  } else {
+    res.render("urls_new", user);
+  }
 });
 
 //generates the page that the user is redirected to when they
 //submit a url to shorten
 app.get("/urls/:id", (req, res) => {
   let longURL = urlDatabase[req.params.id];
-  let UserID = findUserByCookie(req.cookies.userID);
+  let userID = findUserByCookie(req.cookies.user_id);
   //console.log(longURL)
   let urlsShow = {
     shortURL: req.params.id,
     longURL: longURL,
-    user: UserID
+    user: userID
   };
   res.render('urls_show', urlsShow);
 });
@@ -133,18 +136,18 @@ let user = findUserByEmail(req.body.email);
   } else if (user.password !== req.body.password) {
     res.status(403).send("Incorrect password.")
   } else {
-  res.cookie('userID', user['id']);
+  res.cookie('user_id', user['id']);
   res.redirect('/');
   }
 });
 
 app.post("/logout", (req, res) => {
-res.clearCookie('userID');
+res.clearCookie('user_id');
 res.redirect('/urls');
 });
 
 app.post("/register", (req, res) => {
-let userID = generateRandomString();
+let user_id = generateRandomString();
   if (!req.body.email || !req.body.password) {
     res.status(400).send("Email or password is empty");
     };
@@ -152,8 +155,8 @@ let userID = generateRandomString();
     if (req.body.email === users[id]['email']) {
     res.status(400).send("Email already exists.");
   } else {
-    users[userID] = {id: userID, email: req.body.email, password: req.body.password}
-    res.cookie("userID", userID);
+    users[user_id] = {id: user_id, email: req.body.email, password: req.body.password}
+    res.cookie("user_id", user_id);
     res.redirect("/urls");
     };
   };
