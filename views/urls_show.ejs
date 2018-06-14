@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <% include ./partials/_header %>
 </head>
 <body>
-
-  <p> <%= shortURL %> - <%= longURL %>
-
+  <br>
+  <br>
+  <p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <%= shortURL %> - <%= longURL %>
+            <br>
+            <br>
     <form method="POST" action="/urls/<%=shortURL%>">
-      New URL:<input type="text" name="newURL">
-      <button type="submit" value="Update">Update</form>
-
-
+      New associated URL:<input type="text" name="newURL">
+      <button type="submit" value="Update" class="btn btn-primary">Update</form>
+    </th>
+  </tr>
+</thead>
+</table>
   </p>
 
 </body>
