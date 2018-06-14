@@ -125,6 +125,14 @@ app.post("/register", (req, res) => {
 let userID = generateRandomString();
 users[userID] = {id: userID, email: req.body.email, password: req.body.password};
 res.cookie("userID", userID);
+if (!req.body.email.length || !req.body.password.length) {
+  res.status(400).send("Email or password is empty");
+}
+for (id in users) {
+  if (req.body.email === users[id]['email']) {
+    res.status(400).send("Email already exists.");
+  }
+}
 res.redirect("/urls");
 //console.log(users)
 });
