@@ -60,9 +60,9 @@ app.get("/", (req, res) => {
 
 //renders the urls_index html file
 app.get("/urls", (req, res) => {
-  let UserID = findUserByCookie(req.cookies.userID);
+  let user = findUserByCookie(req.cookies.userID);
   let urlsIndex = {
-  user: UserID,
+  user: user,
   urls: urlDatabase
 };
   res.render('urls_index', urlsIndex);
@@ -108,13 +108,15 @@ app.get("/register", (req, res) => {
   res.render("urls_register.ejs")
 });
 
+app.get("/login", (req, res) => {
+  res.render("urls_login.ejs");
+});
+
 //adds the generated short URL and the associated
 //long URL to the database object
 app.post("/urls", (req, res) => {
-  //console.log(req.body);
   let shortURL = generateRandomString()  // debug statement to see POST parameters
   urlDatabase[shortURL] = req.body['longURL'];
-  //res.send("Ok");
   res.redirect('/urls/' + shortURL)    // Respond with 'Ok' (we will replace this)
 });
 
@@ -127,42 +129,40 @@ res.redirect("/urls")
 
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.newURL;
-  //console.log(req)
   res.redirect("/urls");
 });
 
 app.post("/login", (req, res) => {
-//let userID = findUserByCookie(req.cookies.userID);
 let user = findUserByEmail(req.body.email);
-//console.log(req)
-res.cookie('userID', user['id']);
-res.redirect('/urls');
+  if (!user) {
+    res.status(403).send("User not found.")
+  } else if (user.password !== req.body.password) {
+    res.status(403).send("Incorrect password.")
+  } else {
+  res.cookie('userID', user['id']);
+  res.redirect('/');
+  }
 });
 
 app.post("/logout", (req, res) => {
-let userID = findUserByCookie(req.cookies.userID);
 res.clearCookie('userID');
 res.redirect('/urls');
 });
 
 app.post("/register", (req, res) => {
 let userID = generateRandomString();
-if (!req.body.email || !req.body.password) {
-  res.status(400).send("Email or password is empty");
-  }
-for (id in users) {
-  if (req.body.email === users[id]['email']) {
+  if (!req.body.email || !req.body.password) {
+    res.status(400).send("Email or password is empty");
+    };
+  for (id in users) {
+    if (req.body.email === users[id]['email']) {
     res.status(400).send("Email already exists.");
   } else {
     users[userID] = {id: userID, email: req.body.email, password: req.body.password}
-res.cookie("userID", userID);
-res.redirect("/urls");
+    res.cookie("userID", userID);
+    res.redirect("/urls");
+    };
   };
-};
-
-//console.log(req.cookies.userID)
-//res.redirect("/urls");
-//console.log(users)
 });
 
 

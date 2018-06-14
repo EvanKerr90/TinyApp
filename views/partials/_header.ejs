@@ -6,14 +6,15 @@
 </head>
 <body>
   <h1>TinyApp</h1>
-    <% if (!user)  { %>
-    <form method="POST" action="/login">
-      Username:<input type="text" name="username"><b>
-      <input type="submit" value="Submit" class="btn btn-primary"></form>
+  <% if (!locals.user) { %>
+      <a href="/login">LOGIN</a>
+      <a href="/register">REGISTER</a>
     <% } else { %>
-    Logged in as: <%=user.email%>
-    <form method="POST" action="/logout">
+      <%= locals.user.email %>
+      <br>
+      <br>
+      <form method="POST" action="/logout">
       <input type="submit" value="Logout" class="btn btn-danger"></form>
-    <% } %>
+      <% } %>
 </body>
 </html>
