@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -110,8 +111,8 @@ app.get("/u/:shortURL", (req, res) => {
   console.log("i am in the short u");
   let longURL = urlDatabase[req.params.shortURL].longURL;
   //console.log(urlDatabase[req.params.shortURL])
-  console.log(longURL)
-  res.redirect(longURL);
+  //console.log(longURL)
+  res.redirect(301, longURL);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -171,9 +172,14 @@ let databaseID = urlDatabase[req.params.id].userID;
 
 app.post("/login", (req, res) => {
 let user = findUserByEmail(req.body.email);
+let hashedPassword = user['password'];
+let password = bcrypt.compareSync(req.body.password, hashedPassword);
+console.log(hashedPassword);
+console.log(req.body.password);
+console.log(password);
   if (!user) {
     res.status(403).send("User not found.")
-  } else if (user.password !== req.body.password) {
+  } else if (!password) {
     res.status(403).send("Incorrect password.")
   } else {
   res.cookie('user_id', user['id']);
@@ -188,6 +194,9 @@ res.redirect('/urls');
 
 app.post("/register", (req, res) => {
 let user_id = generateRandomString();
+const password = req.body.password;
+const hashedPassword = bcrypt.hashSync(password, 10);
+console.log(hashedPassword)
   if (!req.body.email || !req.body.password) {
     res.status(400).send("Email or password is empty");
     };
@@ -195,7 +204,8 @@ let user_id = generateRandomString();
     if (req.body.email === users[id]['email']) {
     res.status(400).send("Email already exists.");
   } else {
-    users[user_id] = {id: user_id, email: req.body.email, password: req.body.password}
+    users[user_id] = {id: user_id, email: req.body.email, password: hashedPassword}
+    //console.log(users[user_id]);
     res.cookie("user_id", user_id);
     res.redirect("/urls");
     };
