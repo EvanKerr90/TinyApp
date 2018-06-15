@@ -11,6 +11,7 @@
       <a href="/register">REGISTER</a>
     <% } else { %>
       <%= locals.user.email %>
+      <a href="/urls/new">New</a>
       <br>
       <br>
       <form method="POST" action="/logout">
