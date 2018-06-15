@@ -30,7 +30,17 @@ function findUserByEmail(email) {
   }
 };
 
-const urlDatabase = {
+function urlsForUser(cookieID) {
+  const urlSubset = {};
+  for (id in urlDatabase) {
+    if (urlDatabase[id]['userID'] === cookieID) {
+     urlSubset[id] = urlDatabase[id];
+    }
+  }
+  return urlSubset;
+}
+
+var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -56,9 +66,11 @@ app.get("/", (req, res) => {
 //renders the urls_index html file
 app.get("/urls", (req, res) => {
   let user = findUserByCookie(req.cookies.user_id);
+  let userURLs = urlsForUser(req.cookies.user_id)
+  //let longURLs = userURLs['longURL']
   let urlsIndex = {
   user: user,
-  urls: urlDatabase
+  urls: userURLs
 };
   res.render('urls_index', urlsIndex);
 });
@@ -71,26 +83,35 @@ let user = findUserByCookie(req.cookies.user_id);
     res.redirect("/login");
   } else {
     res.render("urls_new", user);
-  }
+  };
 });
 
 //generates the page that the user is redirected to when they
 //submit a url to shorten
 app.get("/urls/:id", (req, res) => {
-  let longURL = urlDatabase[req.params.id];
-  let userID = findUserByCookie(req.cookies.user_id);
-  //console.log(longURL)
+  let longURL = urlDatabase[req.params.id]['longURL'];
+  let user = findUserByCookie(req.cookies.user_id);
+  let databaseID = urlDatabase[req.params.id]['userID']
+  if (!user) {
+    res.send("Please log in.");
+  } else if (databaseID !== user['id']) {
+    res.send("You do not have access to this URL.")
+  } else {
   let urlsShow = {
     shortURL: req.params.id,
     longURL: longURL,
-    user: userID
-  };
+    user: user
+    };
   res.render('urls_show', urlsShow);
+  }
 });
 //redirects the user to the long URL associated with the short URL
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(301, longURL);
+  console.log("i am in the short u");
+  let longURL = urlDatabase[req.params.shortURL].longURL;
+  //console.log(urlDatabase[req.params.shortURL])
+  console.log(longURL)
+  res.redirect(longURL);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -112,20 +133,39 @@ app.get("/login", (req, res) => {
 //adds the generated short URL and the associated
 //long URL to the database object
 app.post("/urls", (req, res) => {
-  let shortURL = generateRandomString()  // debug statement to see POST parameters
-  urlDatabase[shortURL] = req.body['longURL'];
-  res.redirect('/urls/' + shortURL)    // Respond with 'Ok' (we will replace this)
+  let shortURL = generateRandomString()
+  let user = findUserByCookie(req.cookies.user_id);
+  urlDatabase[shortURL] = {longURL: req.body['longURL'], userID: user['id']};
+  res.redirect('/urls/' + shortURL)
 });
 
 //deletes the associated short and long URLs when the user
 //clicks the submit button
 app.post("/urls/:id/delete", (req, res) => {
-delete urlDatabase[req.params.id];
-res.redirect("/urls")
+let user = findUserByCookie(req.cookies.user_id);
+let userID = user['id']
+let databaseID = urlDatabase[req.params.id].userID;
+  if (userID !== databaseID) {
+    res.send("not today!")
+  } else {
+    delete urlDatabase[req.params.id];
+    res.redirect("/urls")
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.newURL;
+let user = findUserByCookie(req.cookies.user_id);
+let userID = user['id']
+let databaseID = urlDatabase[req.params.id].userID;
+  if (userID !== databaseID) {
+  res.send("not today!")
+  } else {
+    urlDatabase[req.params.id]['longURL'] = req.body.newURL;
+    //console.log(req);
+    //console.log(urlDatabase[req.params.id]);
+    console.log("after update ",urlDatabase);
+    //console.log(urlDatabase[req.params.id]['longURL']);
+  }
   res.redirect("/urls");
 });
 
