@@ -10,9 +10,11 @@
       <a href="/login">LOGIN</a>
       <a href="/register">REGISTER</a>
     <% } else { %>
-      <%= locals.user.email %>
-      <a href="/urls/new">New</a>
+      Logged in as: <%= locals.user.email %>
       <br>
+        <br>
+      <a href="/urls/new">New</a>
+        <br>
       <br>
       <form method="POST" action="/logout">
       <input type="submit" value="Logout" class="btn btn-danger"></form>
