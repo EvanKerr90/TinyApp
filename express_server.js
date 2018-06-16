@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
 
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -45,7 +46,7 @@ function urlsForUser(cookieID) {
     }
   }
   return urlSubset;
-}
+};
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -117,7 +118,6 @@ app.get("/urls/:id", (req, res) => {
 //redirects the user to the long URL associated with the short URL
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL].longURL;
-  console.log(longURL)
   res.redirect(301, longURL);
 });
 
@@ -169,7 +169,6 @@ app.post("/urls/:id", (req, res) => {
     res.send("not today!")
   } else {
     urlDatabase[req.params.id]['longURL'] = req.body.newURL;
-    //console.log(urlDatabase[req.params.id]['longURL'])
   }
   res.redirect("/urls");
 });
@@ -198,8 +197,6 @@ app.post("/logout", (req, res) => {
 //authentication purposes
 app.post("/register", (req, res) => {
   let user_id = generateRandomString();
-  //const password = req.body.password;
-  //const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     if (!req.body.email || !req.body.password) {
       res.status(400).send("Email or password is empty");
       return;
