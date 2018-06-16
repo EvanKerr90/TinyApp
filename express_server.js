@@ -194,24 +194,27 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 });
 
-//adds the person
+//adds the user to the users database for login
+//authentication purposes
 app.post("/register", (req, res) => {
   let user_id = generateRandomString();
-  const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  for (id in users) {
-    if (req.body.email === users[id]['email']) {
-      res.status(400).send("Email already exists.");
-    } else if (!req.body.email || !req.body.password) {
+  //const password = req.body.password;
+  //const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    if (!req.body.email || !req.body.password) {
       res.status(400).send("Email or password is empty");
-    } else {
-      users[user_id] = {
+      return;
+    }
+    for (id in users) {
+      if (req.body.email === users[id]['email']) {
+        res.status(400).send("Email already exists.");
+        return;
+      }
+    } 
+    users[user_id] = {
         id: user_id,
         email: req.body.email,
-        password: hashedPassword
+        password: bcrypt.hashSync(req.body.password, 10)
       }
       req.session.user_id = user_id;
-    };
-  };
   res.redirect("/");
 });
