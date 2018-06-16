@@ -87,7 +87,6 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   let user = findUserByCookie(req.session.user_id);
   let userShow = {user};
-  console.log(user);
   if (!user) {
     res.redirect("/login");
   } else {

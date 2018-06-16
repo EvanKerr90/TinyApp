@@ -5,26 +5,22 @@
   <% include ./partials/_header %>
 </head>
 <body>
-
   <% if (!user) { %>
   <p>Please register or login first.</p>
 <% } else { %>
- <br>
-  <br>
   <table class="table">
     <thead>
-    <% for (property in urls) { %>
-      <tr>
-      <td><%= urls[property].longURL %></td> 
-      <td> <%= property %></td>
-      <td><form method="POST" action="/urls/<%=property%>/delete"><input type="submit" value="DELETE" name="<%=property%>" class="btn btn-danger"></form></td>
-      <td><a href="/urls/<%=property%>">Edit</a></td>
-      </tr>
+        &emsp;<a href="/urls/new">NEW</a>
+          <% for (property in urls) { %>
+          <tr>
+          <td><%= urls[property].longURL %></td> 
+          <td> <%= property %></td>
+          <td><form method="POST" action="/urls/<%=property%>/delete"><input type="submit" value="DELETE" name="<%=property%>" class="btn btn-danger"></form></td>
+          <td><a href="/urls/<%=property%>">Edit</a></td>
+          </tr>
       <% } %>
     </thead>
   </table>
-
 <% } %>
-
 </body>
 </html>
