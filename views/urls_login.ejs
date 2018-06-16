@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <% include ./partials/_header %>
-  <title>TinyApp</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <% include ./partials/_header %>
+    <title>TinyApp</title>
 </head>
+
 <body>
   <h1>Login</h1>
   <form method="POST" action="/login">
-    Email:<input type="email" name="email">
-    Password:<input type="password" name="password">
+    Email:
+    <input type="email" name="email"> Password:
+    <input type="password" name="password">
     <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 </body>
+
 </html>
